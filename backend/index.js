@@ -3,6 +3,7 @@ const cors = require('cors');
 import {getHTML, getTwitterCount, getInstagramCount} from './lib/scraper.js';
 import db from './lib/db';
 import './lib/cron.js';
+import uniqueCount from './lib/utils';
 
 
 
@@ -45,8 +46,11 @@ app.get('/data', async (request, response, next) =>  {
   //respond with json 
   //response.json({tcount, icount});
   
-  const count = db.value();
-  response.json(count);
+  const {twitter, instagram} = db.value();
+  //filter for single and unique response
+  const uniqueTwitter = uniqueCount(twitter);
+  const uniqueInstagram = uniqueCount(instagram);
+  response.json({twitter:uniqueTwitter, instagram:uniqueInstagram});
 
 
 });
